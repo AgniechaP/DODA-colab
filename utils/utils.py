@@ -36,7 +36,7 @@ def read_label(csv_label_path, label_dic={}):
 def makedir(path):
     # Split the path into directories at each level according to '/'
     path_parts = path.split('/')
-    current_path = ''
+    current_path = '/content'
     # Determine whether the path exists step by step, and create it if it does not exist
     for part in path_parts:
         # Splice the current path with the current level directory

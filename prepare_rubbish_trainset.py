@@ -3,24 +3,24 @@ import os
 import random
 from tqdm import tqdm
 
-from utils.utils import read_label, makedir, get_layout_image
+from utils.utils import read_label, get_layout_image
 
 random.seed(23)
 
 #Path of  uavvaste_vol2
-gwhd_2021_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2/'
+gwhd_2021_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/'
 #Path to save the prepared images for training DODA
-save_path = '/content/drive/MyDrive/DODA/v2/datasets/rubbish/'
+save_path = '/content/drive/MyDrive/DODA/v2/datasets/rubbish_resized2/'
 
 
 
 gwhd_2021_img_path = gwhd_2021_path + 'images/'
-csvFiles = gwhd_2021_path + 'competition_train.csv'
+csvFiles = gwhd_2021_path + 'train_competition.csv'
 
 target_path = save_path + 'target/'
-makedir(target_path)
+# makedir(target_path)
 source_path = save_path + 'source/'
-makedir(source_path)
+# makedir(source_path)
 
 ldm_train_ids = open(save_path + 'train_ldm.txt', 'w', encoding='utf-8')
 ldm_val_ids = open(save_path + 'val_ldm.txt', 'w', encoding='utf-8')

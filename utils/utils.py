@@ -31,6 +31,7 @@ def read_label(csv_label_path, label_dic={}):
         if reader.line_num == 1:
             continue
         label_dic[item[0]] = [item[-2], item[-1]]
+        # print("label_dic: ", label_dic)
     return label_dic
 
 def makedir(path):
@@ -78,7 +79,8 @@ def get_layout_image(img, laBel):
 
     else:
         for bbox in laBel:
-            bbox = np.array(list(map(int,bbox.split(','))))
+            # bbox = np.array(list(map(int,bbox.split(','))))
+            bbox = np.array(list(map(float, bbox.split(',')))).astype(int)
             bboxes.append(bbox)
         bboxes = np.array(bboxes)
         for bbox in bboxes:
@@ -158,16 +160,23 @@ def get_layout_image(img, laBel):
 
         if box_lay_1.shape[0] > 1:
             for bbox in box_lay_1:
-                cv2.rectangle(box_img_lay_1, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255), -1)
+                # cv2.rectangle(box_img_lay_1, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255), -1)
+                cv2.rectangle(box_img_lay_1, (bbox[0], bbox[1]), (bbox[0] + bbox[2], bbox[1] + bbox[3]), (255), -1)
         if box_lay_2.shape[0] > 1:
             for bbox in box_lay_2:
-                cv2.rectangle(box_img_lay_2, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255), -1)
+                # print("lay_2 bbox: ", bbox)
+                # cv2.rectangle(box_img_lay_2, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255), -1)
+                cv2.rectangle(box_img_lay_2, (bbox[0], bbox[1]), (bbox[0] + bbox[2], bbox[1] + bbox[3]), (255), -1)
         if box_lay_3.shape[0] > 1:
             for bbox in box_lay_3:
                 if bbox not in box_lay_2:
-                    cv2.rectangle(box_img_lay_3, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255), -1)        
+                    # print("lay_3 bbox: ", bbox)
+                    # cv2.rectangle(box_img_lay_3, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255), -1) 
+                    cv2.rectangle(box_img_lay_3, (bbox[0], bbox[1]), (bbox[0] + bbox[2], bbox[1] + bbox[3]), (255), -1)
+                           
                 
         source_img = np.concatenate((box_img_lay_1, box_img_lay_2, box_img_lay_3), axis=2)
+        # print("source_img: ", source_img)
 
     return source_img, n_lay
         

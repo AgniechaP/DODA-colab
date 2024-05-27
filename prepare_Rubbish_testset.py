@@ -12,11 +12,11 @@ gwhd_2021_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/
 
 
 #Path to save the images of Terraref domain
-Terraref_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref/target/'
+Terraref_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref_vol3/target/'
 # makedir(Terraref_path)
-Terraref_ori_source_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref/source/'
+Terraref_ori_source_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref_vol3/source/'
 # makedir(Terraref_ori_source_path)
-Terraref_cut_Path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref_x9/'
+Terraref_cut_Path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref_x9_vol3/'
 # makedir(Terraref_cut_Path)
 Terraref_source_Path = Terraref_cut_Path + 'source/'
 # makedir(Terraref_source_Path)
@@ -51,6 +51,7 @@ for imgName in tqdm(os.listdir(Terraref_path)):
     
     if imgName in label_dic.keys() :
         laBel = label_dic[imgName][0]
+        print("laBel: ", laBel)
 
         imgName = imgName[:-4]
         laBel = laBel.replace(" ", ",").split(';')
@@ -60,6 +61,7 @@ for imgName in tqdm(os.listdir(Terraref_path)):
         if 'no_box' not in laBel:
             # orginal_bbox = np.array([np.array(list(map(int,bbox.split(',')))) for bbox in laBel])    
             orginal_bbox = np.array([np.array(list(map(float, bbox.split(',')))).astype(int) for bbox in laBel])
+            # print("original_bbox: ", orginal_bbox)
 
         #cut image into 512*512, with step=256(x9), and get layout images and new labels(txt)
         i = 0
@@ -78,20 +80,46 @@ for imgName in tqdm(os.listdir(Terraref_path)):
                 
                 if 'no_box' not in laBel:
                     bbox=orginal_bbox.copy()
-                    bbox[:, 0] = bbox[:, 0] - x_start
-                    bbox[:, 2] = bbox[:, 2] - x_start
-                    bbox[:, 1] = bbox[:, 1] - y_start
-                    bbox[:, 3] = bbox[:, 3] - y_start
+                    # bbox[:, 0] = bbox[:, 0] - x_start
+                    # print("bbox[:, 0]: ", bbox[:, 0])
+                    # bbox[:, 2] = bbox[:, 2] - x_start
+                    # print("bbox[:, 2]: ", bbox[:, 2])
+                    # bbox[:, 1] = bbox[:, 1] - y_start
+                    # print("bbox[:, 1] ", bbox[:, 2])
+                    # bbox[:, 3] = bbox[:, 3] - y_start
+                    # print("bbox[:, 3]: ", bbox[:, 3])
 
-                    bbox[:, 0:2][bbox[:, 0:2]<0] = 0
-                    bbox[:, 2][bbox[:, 2]>511] = 511
-                    bbox[:, 3][bbox[:, 3]>511] = 511
+                    # bbox[:, 0:2][bbox[:, 0:2]<0] = 0
+                    # bbox[:, 2][bbox[:, 2]>511] = 511
+                    # bbox[:, 3][bbox[:, 3]>511] = 511
 
-                    bboxes = bbox[np.logical_and((bbox[:, 2] - bbox[:, 0])>10, (bbox[:, 3] - bbox[:, 1])>10)] # discard invalid box 
+                    # print("(bbox[:, 2] - bbox[:, 0])", (bbox[:, 2] - bbox[:, 0]))
+                    # print("(bbox[:, 3] - bbox[:, 1])", (bbox[:, 3] - bbox[:, 1]))
+
+                    # bboxes = bbox[np.logical_and((bbox[:, 2] - bbox[:, 0])>0, (bbox[:, 3] - bbox[:, 1])>0)] # discard invalid box 
+
+                    bbox[:, 0] = bbox[:, 0] - x_start  # Adjust x coordinate
+                    bbox[:, 1] = bbox[:, 1] - y_start  # Adjust y coordinate
+
+                    # Ensure bbox coordinates are within bounds
+                    bbox[:, 0] = np.clip(bbox[:, 0], 0, 511)
+                    bbox[:, 1] = np.clip(bbox[:, 1], 0, 511)
+                    bbox[:, 2] = np.minimum(bbox[:, 2], 511 - bbox[:, 0])  # Adjust width
+                    bbox[:, 3] = np.minimum(bbox[:, 3], 511 - bbox[:, 1])  # Adjust height
+
+                    # print("bbox[:, 0]: ", bbox[:, 0])
+                    # print("bbox[:, 1] ", bbox[:, 1])
+                    print("bbox[:, 2] ", bbox[:, 2])
+                    print("bbox[:, 3] ", bbox[:, 3])
+
+                    bboxes = bbox[np.logical_and(bbox[:, 2] > 5, bbox[:, 3] > 5)]  # discard invalid box
+                    # print("bboxes: ", bboxes)
                     if bboxes.shape[0] > 0:
+                        # print("bboxes.shape > 0 ", bboxes.shape[0])
                         names_img_with_wheat.write('%s.png'%(imgName + '_' + str(i)) + '\n')
                         for bbox in bboxes:
                             bbox = ','.join(map(str, bbox))
+                            # print("bbox = ,", bbox)
                             Terraref_label.write(' ' + bbox + ',0')
                     else:
                         names_img_wo_wheat.write('%s.png'%(imgName + '_' + str(i)) + '\n')

@@ -12,20 +12,20 @@ from utils.utils import makedir, is_overlaped
 
 
 #Number of images to randomly generate
-n_img = 5000
+n_img = 3
 image_size = 512
 p_background = 0.25
 seed = 23
 
-output_path = 'datasets/random_layout/'
+output_path = '/content/drive/MyDrive/DODA/v2/random_layout/3_random_layouts/'
 
 # To avoid the size of the bboxes in the layout images being too different from the actual size,
 # we use the length and width of the bounding boxes in the label of the target domain. 'use_wh_from_target_domain = True'
 #-----------------------------
 # If you want to randomly generate the length and width of bboxes, set use_wh_from_target_domain to False,
 # and set the base_w, base_h, w_scale, h_scase
-use_wh_from_target_domain = True
-ann_Path = 'datasets/gwhd_2021/competition_test.csv'
+use_wh_from_target_domain = False
+ann_Path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/test_competition.csv'
 base_w = 55
 base_h = 50
 w_scale = (0.15, 2)

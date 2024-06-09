@@ -20,10 +20,10 @@ from transformers import AutoImageProcessor
 ref_img_path = '/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref_x9_vol3/target/'
 assert os.path.exists(ref_img_path), f"The folder '{ref_img_path}' does not exist. Please run 'generate_Terraref_testimg.py' to get the reference images first."
 #Layout images path 
-layout_path = '/content/drive/MyDrive/DODA/v2/random_layout/3_random_layouts/'
+layout_path = '/content/drive/MyDrive/DODA/v2/random_layout/3_random_layouts_640/'
 assert os.path.exists(layout_path), f"The folder '{layout_path}' does not exist. Please run 'random_generate_layout_images.py' to get the layout images first."
 
-output_path = '/content/drive/MyDrive/DODA/v2/output/Output_generate_3_domain/'
+output_path = '/content/drive/MyDrive/DODA/v2/output/Output_generate_3_domain_640/'
 
 #Names of reference images that containing the detection target: wheat heads
 names_img_with_wheat = "/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref_x9_vol3/with_rubbish.txt"
@@ -31,12 +31,12 @@ names_img_with_wheat = "/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_re
 names_img_wo_wheat = "/content/drive/MyDrive/DODA/v2/datasets/uavvaste_vol2_resized/Terraref_x9_vol3/wo_rubbish.txt"
 
 
-n_img = 2   # The number of images that need to be generated
+n_img = 3   # The number of images that need to be generated
 seed = 21
 batch_size = 8
-img_resolution = 512
+img_resolution = 640
 configs = '/content/drive/MyDrive/DODA/v2/configs/controlnet/DODA_rubbish_cldm_kl_4.yaml'
-weight = "/content/drive/MyDrive/DODA/v2/logs/epoch=09-step=1410.ckpt"
+weight = "/content/drive/MyDrive/DODA/v2/logs/train_3_06/epoch=95-step=13536.ckpt"
 
 
 layout_img_path = layout_path + 'img/'
